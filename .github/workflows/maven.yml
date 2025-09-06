@@ -1,0 +1,36 @@
+name: Java CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  build:
+    name: "Test on JDK ${{ matrix.java_version }}"
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java_version: [ 21 ]
+
+    steps:
+    - name: Checkout for build on JDK ${{ matrix.java_version }}
+      uses: actions/checkout@v5
+    - name: Set up JDK ${{ matrix.java_version }}
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java_version }}
+    - name: Display values of inherited properties
+      run: |
+        MQ_VERSION=$(./mvnw -q help:evaluate -DforceStdout -Dexpression=openmq.version)
+        for p in project.url \
+                 project.scm.url \
+                 project.issueManagement.url
+        do
+          printf "%s - %30s: %s\n" \
+                  ${MQ_VERSION} \
+                       ${p} \
+                             $(./mvnw -q help:evaluate -DforceStdout -Dartifact=org.glassfish.mq:mq-client:${MQ_VERSION} -Dexpression=${p})
+        done

@@ -22,6 +22,18 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
+    - name: Display values of top-level dependency properties
+      run: |
+        MQ_PROJ_VERSION=$(./mvnw -q help:evaluate -DforceStdout -Dexpression=openmq-project.version)
+        for p in project.url \
+                 project.scm.url \
+                 project.issueManagement.url
+        do
+          printf "%s - %30s: %s\n" \
+                  ${MQ_PROJ_VERSION} \
+                       ${p} \
+                             $(./mvnw -q help:evaluate -DforceStdout -Dartifact=org.glassfish.mq:project:${MQ_PROJ_VERSION} -Dexpression=${p})
+        done
     - name: Display values of inherited properties
       run: |
         MQ_VERSION=$(./mvnw -q help:evaluate -DforceStdout -Dexpression=openmq.version)

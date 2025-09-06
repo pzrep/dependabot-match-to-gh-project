@@ -10,7 +10,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openmq.version>6.6.0</openmq.version>
-        <openmq-project.version>6.6.0</openmq-project.version>
+        <openmq-project.version>6.7.0</openmq-project.version>
     </properties>
 
     <dependencies>
